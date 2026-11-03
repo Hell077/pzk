@@ -3,32 +3,32 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Know what owns your ports. A native Go terminal app for process, parent, container, and service context on Linux, macOS, and Windows.">
+  <meta name="description" content="PortZapKill (pzk): know what owns your ports. A native Go terminal app for process, parent, container, and service context on Linux, macOS, and Windows.">
   <meta name="theme-color" content="#10110e">
-  <title>Portguard — Know what owns your ports</title>
+  <title>pzk — PortZapKill · Know what owns your ports</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css?v=0.3.1">
-  <script src="app.js?v=0.3.0" defer></script>
+  <link rel="stylesheet" href="style.css?v=0.4.0">
+  <script src="app.js?v=0.4.0" defer></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 <header class="shell nav">
-  <a class="brand" href="#" aria-label="Portguard home"><span class="mark" aria-hidden="true">◈</span> portguard<span class="version">v0.3</span></a>
-  <nav aria-label="Main navigation"><a href="#how-it-works">How it works</a><a href="#install">Install</a><a href="https://github.com/Hell077/portguard">GitHub <span aria-hidden="true">↗</span></a></nav>
+  <a class="brand" href="#" aria-label="pzk — PortZapKill home"><span class="mark" aria-hidden="true">◈</span> pzk<span class="version">v0.4</span></a>
+  <nav aria-label="Main navigation"><a href="#how-it-works">How it works</a><a href="#install">Install</a><a href="https://github.com/Hell077/pzk">GitHub <span aria-hidden="true">↗</span></a></nav>
 </header>
 <main id="main">
 <section class="shell hero">
   <div class="eyebrow"><span class="status-dot"></span> YOUR PORTS. FULL CONTEXT.</div>
   <h1>Know what owns<br>your <span class="hero-word">ports.<span class="cursor" aria-hidden="true">_</span></span></h1>
-  <div class="hero-bottom"><p>A busy port has a reason. See the process, its parent,<br class="desktop"> the container, and the service behind it.<br class="desktop"> Then decide what happens next.</p><a class="button" href="#install">Get Portguard <span aria-hidden="true">↓</span></a></div>
+  <div class="hero-bottom"><p>A busy port has a reason. See the process, its parent,<br class="desktop"> the container, and the service behind it.<br class="desktop"> Then decide what happens next.</p><a class="button" href="#install">Get PortZapKill <span aria-hidden="true">↓</span></a></div>
   <div class="platforms"><span>LINUX</span><span>macOS</span><span>WINDOWS</span><span class="platform-note">Native Go. One binary. No background daemon.</span></div>
 </section>
 <section class="shell product" aria-labelledby="preview-title">
   <div class="section-label"><span id="preview-title">01 / A CLEARER VIEW</span><span>ILLUSTRATIVE TERMINAL SESSION</span></div>
   <div class="terminal">
-    <div class="terminal-bar"><span class="traffic" aria-hidden="true"><i></i><i></i><i></i></span><span>portguard — local machine</span><span>⌘</span></div>
+    <div class="terminal-bar"><span class="traffic" aria-hidden="true"><i></i><i></i><i></i></span><span>pzk — local machine</span><span>⌘</span></div>
     <div class="terminal-body">
-      <div class="terminal-title"><strong>◈ PORTGUARD</strong><span>know what owns your ports</span><span class="live">● LIVE</span></div>
+      <div class="terminal-title"><strong>◈ PZK · PortZapKill</strong><span>know what owns your ports</span><span class="live">● LIVE</span></div>
       <div class="terminal-meta">3 visible · read-only overview</div>
       <div class="terminal-filter">/ search owner, port, service, container<span aria-hidden="true">▏</span></div>
       <div class="table-scroll"><table><thead><tr><th>LOCAL ENDPOINT</th><th>PROTO</th><th>PID</th><th>PROCESS</th><th>CONTEXT</th></tr></thead><tbody>
@@ -47,19 +47,19 @@
   <div class="section-label">02 / FROM OCCUPIED TO UNDERSTOOD</div>
   <div class="workflow-heading"><h2>Find it.<br>Understand it.<br><span>Handle it carefully.</span></h2><p>Start with an overview, focus on one port, and monitor changes. When you need to stop a process, make it an explicit decision.</p></div>
   <div class="command-workbench">
-    <div class="command-tabs" role="tablist" aria-label="Explore Portguard commands">
+    <div class="command-tabs" role="tablist" aria-label="Explore PortZapKill commands">
       <button role="tab" id="tab-list" aria-controls="command-panel" aria-selected="true" data-command="list">01&nbsp; List</button>
       <button role="tab" id="tab-inspect" aria-controls="command-panel" aria-selected="false" tabindex="-1" data-command="inspect">02&nbsp; Inspect</button>
       <button role="tab" id="tab-watch" aria-controls="command-panel" aria-selected="false" tabindex="-1" data-command="watch">03&nbsp; Watch</button>
       <button role="tab" id="tab-kill" aria-controls="command-panel" aria-selected="false" tabindex="-1" data-command="kill">04&nbsp; Stop</button>
     </div>
-    <div class="command-panel" id="command-panel" role="tabpanel" aria-labelledby="tab-list" tabindex="0"><div class="prompt"><span>$</span> <code id="demo-command">portguard list --range 3000-9000</code></div><p id="demo-description">See every visible TCP listener and bound UDP socket in an inclusive port range. Add --json for scripts and tooling.</p><pre id="demo-output">PROTO  ENDPOINT          PID    PROCESS
+    <div class="command-panel" id="command-panel" role="tabpanel" aria-labelledby="tab-list" tabindex="0"><div class="prompt"><span>$</span> <code id="demo-command">pzk list --range 3000-9000</code></div><p id="demo-description">See every visible TCP listener and bound UDP socket in an inclusive port range. Add --json for scripts and tooling.</p><pre id="demo-output">PROTO  ENDPOINT          PID    PROCESS
 TCP    127.0.0.1:3000    42819  node
 TCP    127.0.0.1:5432    9132   postgres
 TCP    0.0.0.0:6379      0      docker publication</pre><span class="example-label">Example output · no commands run in your browser</span></div>
   </div>
 </section>
-<section class="safety-band"><div class="shell safety"><div><div class="section-label">03 / CONTEXT BEFORE ACTION</div><h2>A little caution.<br>A lot less disruption.</h2><a class="text-link" href="https://github.com/Hell077/portguard#termination-safety">Read the safety model ↗</a></div><div class="safety-list">
+<section class="safety-band"><div class="shell safety"><div><div class="section-label">03 / CONTEXT BEFORE ACTION</div><h2>A little caution.<br>A lot less disruption.</h2><a class="text-link" href="https://github.com/Hell077/pzk#termination-safety">Read the safety model ↗</a></div><div class="safety-list">
   <article><span>01</span><div><h3>Inspect freely.</h3><p>Browsing and monitoring are read-only. No firewall changes, automatic restarts, or hidden background agent.</p></div></article>
   <article><span>02</span><div><h3>Confirm the whole impact.</h3><p>Stopping a port owner affects its other ports, too. Review all visible owners before typing yes. Force always requires an explicit flag.</p></div></article>
   <article><span>03</span><div><h3>Check the identity again.</h3><p>Ownership is rechecked before shutdown. Linux and Windows use process-bound handles. macOS revalidates start time; a small OS-level race remains.</p></div></article>
@@ -67,11 +67,11 @@ TCP    0.0.0.0:6379      0      docker publication</pre><span class="example-lab
 <section class="shell install" id="install">
   <div class="section-label">04 / READY WHEN YOU ARE</div>
   <div class="install-heading"><h2>One command.<br><span>Full context.</span></h2><p>Install from source with Go 1.27.3+, or download a single binary for your machine.</p></div>
-  <div class="install-box"><div class="install-tabs" role="tablist" aria-label="Installation method"><button role="tab" id="install-go" aria-controls="install-panel" aria-selected="true" data-install="go">Go install</button><button role="tab" id="install-unix" aria-controls="install-panel" aria-selected="false" tabindex="-1" data-install="unix">Linux / macOS</button><button role="tab" id="install-windows" aria-controls="install-panel" aria-selected="false" tabindex="-1" data-install="windows">Windows</button></div><div id="install-panel" role="tabpanel" aria-labelledby="install-go"><div class="install-command"><code id="install-command">go install github.com/Hell077/portguard@latest</code><button id="copy" aria-label="Copy installation command">Copy <span aria-hidden="true">↗</span></button></div><p id="install-note">Requires Go 1.27.3+. Add your Go bin directory to PATH, then run portguard.</p></div><p id="copy-status" role="status" aria-live="polite"></p></div>
-  <div class="downloads"><span>Or get a binary:</span><a href="https://github.com/Hell077/portguard/releases/latest">Linux · macOS · Windows ↗</a><span>amd64 & arm64 · SHA-256 checksums included</span></div>
+  <div class="install-box"><div class="install-tabs" role="tablist" aria-label="Installation method"><button role="tab" id="install-go" aria-controls="install-panel" aria-selected="true" data-install="go">Go install</button><button role="tab" id="install-unix" aria-controls="install-panel" aria-selected="false" tabindex="-1" data-install="unix">Linux / macOS</button><button role="tab" id="install-windows" aria-controls="install-panel" aria-selected="false" tabindex="-1" data-install="windows">Windows</button></div><div id="install-panel" role="tabpanel" aria-labelledby="install-go"><div class="install-command"><code id="install-command">go install github.com/Hell077/pzk@latest</code><button id="copy" aria-label="Copy installation command">Copy <span aria-hidden="true">↗</span></button></div><p id="install-note">Requires Go 1.27.3+. Add your Go bin directory to PATH, then run pzk.</p></div><p id="copy-status" role="status" aria-live="polite"></p></div>
+  <div class="downloads"><span>Or get a binary:</span><a href="https://github.com/Hell077/pzk/releases/latest">Linux · macOS · Windows ↗</a><span>amd64 & arm64 · SHA-256 checksums included</span></div>
   <p class="install-footnote">macOS 13+. Linux safe termination needs kernel 5.3+. Windows graceful shutdown requires an application window; headless processes need their own shutdown interface or an explicit force request.</p>
 </section>
 </main>
-<footer class="shell footer"><a class="brand" href="#"><span class="mark" aria-hidden="true">◈</span> portguard</a><span>Small binary. Clear ownership.</span><div><a href="https://github.com/Hell077/portguard#commands">Documentation</a><a href="https://github.com/Hell077/portguard">Source ↗</a><a href="https://github.com/Hell077/portguard/blob/main/LICENSE">MIT license</a></div></footer>
+<footer class="shell footer"><a class="brand" href="#"><span class="mark" aria-hidden="true">◈</span> pzk</a><span>Small binary. Clear ownership.</span><div><a href="https://github.com/Hell077/pzk#commands">Documentation</a><a href="https://github.com/Hell077/pzk">Source ↗</a><a href="https://github.com/Hell077/pzk/blob/main/LICENSE">MIT license</a></div></footer>
 </body>
 </html>
