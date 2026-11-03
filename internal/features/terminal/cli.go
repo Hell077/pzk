@@ -10,6 +10,7 @@ import (
 	"io"
 	"os"
 	"os/signal"
+	"runtime"
 	"strconv"
 	"strings"
 	"time"
@@ -99,7 +100,7 @@ func run(args []string, version string, in io.Reader, out, errOut io.Writer) err
 		return fmt.Errorf("unexpected argument %q; use --help", rest[0])
 	}
 	if showVersion {
-		fmt.Fprintf(out, "portguard %s (Go 1.27.3; search: %s)\n", version, search.Backend)
+		fmt.Fprintf(out, "portguard %s (%s; search: %s)\n", version, runtime.Version(), search.Backend)
 		return nil
 	}
 	if command == "inspect" || command == "watch" || command == "kill" {
