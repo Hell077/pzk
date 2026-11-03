@@ -26,6 +26,8 @@ type model struct {
 	width, height, cursor int
 	loading, editing      bool
 	query                 string
+	stop                  *stopAction
+	stopper               portStopper
 }
 
 var (
@@ -37,7 +39,7 @@ var (
 )
 
 func newModel(ctx context.Context, o options) model {
-	return model{ctx: ctx, opts: o, query: o.query, width: 100, height: 30, loading: true}
+	return model{ctx: ctx, opts: o, query: o.query, width: 100, height: 30, loading: true, stopper: nativeStopper{}}
 }
 func (m model) fetch() tea.Cmd {
 	return func() tea.Msg { s, err := load(m.ctx, m.opts); return resultMsg{s, err} }
@@ -54,6 +56,10 @@ func (m model) rows() inspect.Listeners {
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
+	case stopPreparedMsg:
+		return m.preparedStop(msg)
+	case stopFinishedMsg:
+		return m.finishedStop(msg)
 	case tea.WindowSizeMsg:
 		m.width = msg.Width
 		m.height = msg.Height
@@ -79,7 +85,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		return m, nil
 	case tickMsg:
-		if !m.loading {
+		if m.stop == nil && !m.loading {
 			m.loading = true
 			return m, tea.Batch(m.tick(), m.fetch())
 		}
@@ -87,6 +93,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.KeyMsg:
 		if msg.String() == "ctrl+c" {
 			return m, tea.Quit
+		}
+		if m.stop != nil {
+			return m.stopKey(msg)
 		}
 		if m.editing {
 			switch msg.Type {
@@ -106,6 +115,10 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, nil
 		}
 		switch msg.String() {
+		case "ctrl+k":
+			return m.beginStop(false)
+		case "ctrl+x":
+			return m.beginStop(true)
 		case "q", "esc":
 			return m, tea.Quit
 		case "j", "down":
@@ -140,6 +153,9 @@ func (m model) View() string {
 	w := max(10, m.width-4)
 	if m.width < 48 || m.height < 16 {
 		return "Portguard\nTerminal too small (48×16 minimum).\nUse --once or --json, or resize.\nq / ctrl+c to quit\n"
+	}
+	if m.stop != nil {
+		return m.stopView()
 	}
 	rows := m.rows()
 	var b strings.Builder
@@ -234,7 +250,11 @@ func (m model) View() string {
 		b.WriteString(warning.Render(clip("! "+strings.Join(m.snapshot.Warnings, " · "), w)) + "\n")
 	}
 	b.WriteString(warning.Render(clip("Inspect the owner before exposing a port or restarting its service.", w)) + "\n")
-	b.WriteString(muted.Render(clip("↑↓ / jk navigate   / filter   c clear   r refresh   q quit", w)))
+	help := "↑↓/jk select  Ctrl+K stop  Ctrl+X force  / filter  r refresh  q quit"
+	if w < 75 {
+		help = "↑↓  Ctrl+K stop  Ctrl+X force  /  q quit"
+	}
+	b.WriteString(muted.Render(clip(help, w)))
 	// Cap every line and viewport height, including unusually small resized terminals.
 	lines := strings.Split(b.String(), "\n")
 	if len(lines) > m.height-2 {
