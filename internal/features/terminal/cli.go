@@ -65,7 +65,7 @@ func run(args []string, version string, in io.Reader, out, errOut io.Writer) err
 	}
 	fs.Usage = func() {
 		if command == "" {
-			fmt.Fprint(errOut, "Portguard — know what owns your ports.\n\nUsage: portguard <command> [flags]\n\n  list [--range 3000-9000] [--json]\n  inspect PORT [--json]\n  watch PORT [--interval 2s]\n  kill PORT [--force] [--yes]\n\nNo command opens the live terminal UI. Inspection never changes processes or firewalls.\nKill asks for confirmation unless --yes; it never escalates automatically.\n")
+			fmt.Fprint(errOut, "Portguard — know what owns your ports.\n\nUsage: portguard <command> [flags]\n\n  list [--range 3000-9000] [--json]\n  inspect PORT [--json]\n  watch PORT [--interval 2s]\n  kill PORT [--force] [--yes]\n\nWith no command, Portguard opens the live terminal UI. Inspection never changes processes or firewalls.\nKill asks for confirmation unless --yes; it never escalates automatically.\n")
 		} else {
 			fmt.Fprintf(errOut, "Usage: portguard %s", command)
 			if command != "list" {

@@ -45,7 +45,7 @@ func (m model) fetch() tea.Cmd {
 func (m model) tick() tea.Cmd {
 	return tea.Tick(m.opts.interval, func(t time.Time) tea.Msg { return tickMsg(t) })
 }
-func (m model) Init() tea.Cmd { return m.fetch() }
+func (m model) Init() tea.Cmd { return tea.Batch(m.fetch(), m.tick()) }
 func (m model) rows() inspect.Listeners {
 	o := m.opts
 	o.query = m.query
@@ -77,12 +77,13 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				break
 			}
 		}
-		return m, m.tick()
+		return m, nil
 	case tickMsg:
 		if !m.loading {
 			m.loading = true
-			return m, m.fetch()
+			return m, tea.Batch(m.tick(), m.fetch())
 		}
+		return m, m.tick()
 	case tea.KeyMsg:
 		if msg.String() == "ctrl+c" {
 			return m, tea.Quit
