@@ -3,8 +3,8 @@ package terminal
 import (
 	"context"
 	"fmt"
-	"github.com/Hell077/portguard/internal/features/inspect"
-	"github.com/Hell077/portguard/internal/features/scan"
+	"github.com/Hell077/pzk/internal/features/inspect"
+	"github.com/Hell077/pzk/internal/features/scan"
 	"strings"
 	"time"
 )
@@ -49,7 +49,7 @@ func Safe(s string) string {
 
 func Plain(s inspect.Snapshot) string {
 	var b strings.Builder
-	fmt.Fprintln(&b, "PORTGUARD · port inspection")
+	fmt.Fprintln(&b, "PZK · port inspection")
 	fmt.Fprintln(&b, "PROTO  ENDPOINT                  PID     PROCESS              PARENT / SERVICE / CONTAINER")
 	rows := s.Listeners.Project(func(l inspect.Listener) string {
 		context := l.Process.ParentName

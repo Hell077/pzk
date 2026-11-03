@@ -3,7 +3,7 @@ package inspect
 
 import (
 	"fmt"
-	"github.com/Hell077/portguard/internal/platform/search"
+	"github.com/Hell077/pzk/internal/platform/search"
 	"net"
 	"strconv"
 	"strings"

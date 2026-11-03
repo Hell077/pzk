@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/Hell077/portguard/internal/features/inspect"
-	"github.com/Hell077/portguard/internal/features/terminate"
+	"github.com/Hell077/pzk/internal/features/inspect"
+	"github.com/Hell077/pzk/internal/features/terminate"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 )

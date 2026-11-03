@@ -15,8 +15,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Hell077/portguard/internal/features/terminate"
-	"github.com/Hell077/portguard/internal/platform/search"
+	"github.com/Hell077/pzk/internal/features/terminate"
+	"github.com/Hell077/pzk/internal/platform/search"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/mattn/go-isatty"
 )
@@ -32,9 +32,9 @@ func run(args []string, version string, in io.Reader, out, errOut io.Writer) err
 		args = args[1:]
 	}
 	if command != "" && command != "list" && command != "inspect" && command != "watch" && command != "kill" {
-		return fmt.Errorf("unknown command %q; use portguard --help", command)
+		return fmt.Errorf("unknown command %q; use pzk --help", command)
 	}
-	fs := flag.NewFlagSet("portguard "+command, flag.ContinueOnError)
+	fs := flag.NewFlagSet("pzk "+command, flag.ContinueOnError)
 	fs.SetOutput(errOut)
 	var o options
 	var showVersion, force, yes bool
@@ -67,9 +67,9 @@ func run(args []string, version string, in io.Reader, out, errOut io.Writer) err
 	}
 	fs.Usage = func() {
 		if command == "" {
-			fmt.Fprint(errOut, "Portguard — know what owns your ports.\n\nUsage: portguard <command> [flags]\n\n  list [--range 3000-9000] [--json]\n  inspect PORT [--json]\n  watch (PORT | --range START-END) [--interval 2s]\n  kill PORT [--force] [--yes]\n\nWith no command, Portguard opens the live terminal UI. Inspection never changes processes or firewalls.\nKill asks for confirmation unless --yes; it never escalates automatically.\n")
+			fmt.Fprint(errOut, "PortZapKill (pzk) — know what owns your ports.\n\nUsage: pzk <command> [flags]\n\n  list [--range 3000-9000] [--json]\n  inspect PORT [--json]\n  watch (PORT | --range START-END) [--interval 2s]\n  kill PORT [--force] [--yes]\n\nWith no command, PortZapKill opens the live terminal UI. Inspection never changes processes or firewalls.\nKill asks for confirmation unless --yes; it never escalates automatically.\n")
 		} else {
-			fmt.Fprintf(errOut, "Usage: portguard %s", command)
+			fmt.Fprintf(errOut, "Usage: pzk %s", command)
 			if command == "watch" {
 				fmt.Fprint(errOut, " (PORT | --range START-END)")
 			} else if command != "list" {
@@ -104,7 +104,7 @@ func run(args []string, version string, in io.Reader, out, errOut io.Writer) err
 		return fmt.Errorf("unexpected argument %q; use --help", rest[0])
 	}
 	if showVersion {
-		fmt.Fprintf(out, "portguard %s (%s; search: %s)\n", version, runtime.Version(), search.Backend)
+		fmt.Fprintf(out, "pzk %s (%s; search: %s)\n", version, runtime.Version(), search.Backend)
 		return nil
 	}
 	if command == "watch" {

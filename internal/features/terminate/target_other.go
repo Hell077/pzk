@@ -4,7 +4,7 @@ package terminate
 
 import (
 	"errors"
-	"github.com/Hell077/portguard/internal/features/inspect"
+	"github.com/Hell077/pzk/internal/features/inspect"
 )
 
 func openTarget(p inspect.Process, force bool) (target, error) {

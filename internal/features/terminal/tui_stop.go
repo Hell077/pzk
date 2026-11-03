@@ -7,7 +7,7 @@ import (
 	"io"
 	"strings"
 
-	"github.com/Hell077/portguard/internal/features/terminate"
+	"github.com/Hell077/pzk/internal/features/terminate"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/charmbracelet/x/ansi"
@@ -170,7 +170,7 @@ func (m model) stopView() string {
 	if a.force {
 		title = "FORCE STOP · UNSAVED WORK MAY BE LOST"
 	}
-	b.WriteString(bright.Render("◈ PORTGUARD") + "  " + warning.Render(clip(title, w-15)) + "\n\n")
+	b.WriteString(bright.Render("◈ PZK · PortZapKill") + "  " + warning.Render(clip(title, w-15)) + "\n\n")
 	b.WriteString(bright.Render(fmt.Sprintf("Port %d · all TCP/UDP owners", a.port)) + "\n")
 	switch a.phase {
 	case stopPreparing:

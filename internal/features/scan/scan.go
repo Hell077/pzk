@@ -10,9 +10,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Hell077/portguard/internal/features/containers"
-	"github.com/Hell077/portguard/internal/features/inspect"
-	"github.com/Hell077/portguard/internal/features/services"
+	"github.com/Hell077/pzk/internal/features/containers"
+	"github.com/Hell077/pzk/internal/features/inspect"
+	"github.com/Hell077/pzk/internal/features/services"
 	gnet "github.com/shirou/gopsutil/v4/net"
 	"github.com/shirou/gopsutil/v4/process"
 )

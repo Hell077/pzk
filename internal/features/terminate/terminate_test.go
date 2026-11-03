@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
-	"github.com/Hell077/portguard/internal/features/inspect"
+	"github.com/Hell077/pzk/internal/features/inspect"
 	"strings"
 	"testing"
 	"time"

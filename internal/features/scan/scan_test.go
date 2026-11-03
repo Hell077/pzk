@@ -2,7 +2,7 @@ package scan
 
 import (
 	"context"
-	"github.com/Hell077/portguard/internal/features/inspect"
+	"github.com/Hell077/pzk/internal/features/inspect"
 	"net"
 	"os"
 	"testing"

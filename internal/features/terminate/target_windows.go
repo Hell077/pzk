@@ -3,7 +3,7 @@ package terminate
 import (
 	"errors"
 	"fmt"
-	"github.com/Hell077/portguard/internal/features/inspect"
+	"github.com/Hell077/pzk/internal/features/inspect"
 	"golang.org/x/sys/windows"
 	"syscall"
 	"unsafe"

@@ -5,7 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/Hell077/portguard/internal/platform/command"
+	"github.com/Hell077/pzk/internal/platform/command"
 	"os"
 	"path/filepath"
 	"runtime"

@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Hell077/portguard/internal/features/inspect"
-	"github.com/Hell077/portguard/internal/features/scan"
+	"github.com/Hell077/pzk/internal/features/inspect"
+	"github.com/Hell077/pzk/internal/features/scan"
 )
 
 // Selection is a fixed set of identities to show before interactive confirmation.

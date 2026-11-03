@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/Hell077/portguard/internal/features/terminal"
+	"github.com/Hell077/pzk/internal/features/terminal"
 	"os"
 	"runtime/debug"
 )
@@ -18,7 +18,7 @@ func main() {
 	}
 
 	if err := terminal.Run(os.Args[1:], version, os.Stdout, os.Stderr); err != nil {
-		fmt.Fprintln(os.Stderr, "portguard:", err)
+		fmt.Fprintln(os.Stderr, "pzk:", err)
 		os.Exit(1)
 	}
 }

@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Hell077/portguard/internal/features/inspect"
+	"github.com/Hell077/pzk/internal/features/inspect"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/charmbracelet/x/ansi"
@@ -152,7 +152,7 @@ func cell(s string, n int) string {
 func (m model) View() string {
 	w := max(10, m.width-4)
 	if m.width < 48 || m.height < 16 {
-		return "Portguard\nTerminal too small (48×16 minimum).\nUse --once or --json, or resize.\nq / ctrl+c to quit\n"
+		return "PortZapKill\nTerminal too small (48×16 minimum).\nUse --once or --json, or resize.\nq / ctrl+c to quit\n"
 	}
 	if m.stop != nil {
 		return m.stopView()
@@ -163,7 +163,7 @@ func (m model) View() string {
 	if m.loading {
 		status = "◌ SCANNING"
 	}
-	b.WriteString(bright.Render("◈ PORTGUARD") + "  " + muted.Render("know what owns your ports") + "\n")
+	b.WriteString(bright.Render("◈ PZK · PortZapKill") + "  " + muted.Render("know what owns your ports") + "\n")
 	scope := ""
 	if m.opts.low > 0 {
 		scope = fmt.Sprintf(" · ports %d–%d", m.opts.low, m.opts.high)

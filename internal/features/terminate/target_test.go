@@ -5,7 +5,7 @@ package terminate
 import (
 	"bufio"
 	"fmt"
-	"github.com/Hell077/portguard/internal/features/inspect"
+	"github.com/Hell077/pzk/internal/features/inspect"
 	"github.com/shirou/gopsutil/v4/process"
 	"net"
 	"os"
@@ -17,7 +17,7 @@ import (
 
 // The only real process signaled by tests is this test-owned child.
 func TestProcessHelper(t *testing.T) {
-	if os.Getenv("PORTGUARD_TEST_CHILD") != "1" {
+	if os.Getenv("PZK_TEST_CHILD") != "1" {
 		return
 	}
 	ln, err := net.Listen("tcp", "127.0.0.1:0")
@@ -39,7 +39,7 @@ func TestBoundHandleRejectsWrongIdentityAndStopsChild(t *testing.T) {
 		t.Fatal(err)
 	}
 	cmd := exec.Command(exe, "-test.run=^TestProcessHelper$")
-	cmd.Env = append(os.Environ(), "PORTGUARD_TEST_CHILD=1")
+	cmd.Env = append(os.Environ(), "PZK_TEST_CHILD=1")
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
 		t.Fatal(err)

@@ -1,4 +1,4 @@
-module github.com/Hell077/portguard
+module github.com/Hell077/pzk
 
 go 1.27.3
 
