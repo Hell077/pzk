@@ -65,7 +65,7 @@ portguard --help
 portguard kill --help
 portguard --version
 
-# Live overview; / filters, ↑↓ or j/k navigate, r refreshes, c clears, q quits
+# Live overview; / filters, ↑↓ or j/k select, Ctrl+K stops, Ctrl+X forces
 portguard
 ```
 
@@ -73,9 +73,13 @@ portguard
 
 Without an interactive terminal, the overview prints one plain snapshot and watch prints successive snapshots. `--no-containers` skips optional engine queries for list, inspect, watch, and the overview. `--once` prints a single overview. Ranges are inclusive and must be within 1–65535. `watch` accepts either a positional port or `--range`, and rejects using both together. Filtering is case-insensitive and includes parents, services, and container names.
 
+## Terminal shortcuts
+
+Select a row with ↑/↓ or j/k. **Ctrl+K** requests graceful shutdown of every owner of the selected port; **Ctrl+X** requests force termination. Both open a separate review showing all TCP/UDP owners, including owners hidden by a search filter. Type exactly `yes` and press Enter to proceed, or Esc to cancel. The review pauses automatic refresh, and the backend rejects any change to the reviewed identities before signaling. Force can lose unsaved work. A result panel reports success or failure; Enter/Esc returns to the live view.
+
 ## Termination safety
 
-Inspection and monitoring are read-only. Only `kill` signals processes. Portguard never changes firewalls, exposes ports, restarts a service, or automatically requests elevated privileges.
+Inspection and monitoring are read-only. The `kill` command and confirmed terminal shortcuts signal processes. Portguard never changes firewalls, exposes ports, restarts a service, or automatically requests elevated privileges.
 
 - A port can have multiple owners, addresses, or TCP/UDP bindings. `kill` deduplicates PIDs and shows the complete visible target set. Terminating a process affects **every port it owns**.
 - Confirmation requires the word `yes`; EOF or any other response cancels. `--yes` skips only the prompt, preserving all checks.
