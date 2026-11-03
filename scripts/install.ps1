@@ -13,7 +13,9 @@ New-Item -ItemType Directory -Path $temp | Out-Null
 try {
     $binary = Join-Path $temp $asset
     Invoke-WebRequest "$base/$asset" -OutFile $binary -UseBasicParsing
-    $checksums = (Invoke-WebRequest "$base/checksums.txt" -UseBasicParsing).Content
+    $checksumFile = Join-Path $temp 'checksums.txt'
+    Invoke-WebRequest "$base/checksums.txt" -OutFile $checksumFile -UseBasicParsing
+    $checksums = Get-Content $checksumFile -Raw
     $line = $checksums -split "`n" | Where-Object { $_ -match "\s+$([regex]::Escape($asset))\s*$" } | Select-Object -First 1
     if (-not $line) { throw 'No release checksum found. Nothing installed.' }
     $expected = ($line.Trim() -split '\s+')[0]
