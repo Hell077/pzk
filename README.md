@@ -54,6 +54,7 @@ portguard kill 8080 --force --yes
 # Refresh every two seconds; Ctrl+C stops monitoring
 portguard watch 8080
 portguard watch 8080 --interval 1s
+portguard watch --range 7999-8080
 
 # Structured output; watch emits newline-delimited JSON
 portguard list --json
@@ -70,7 +71,7 @@ portguard
 
 `list` returns an empty result successfully when nothing matches. `inspect` and `kill` return an error when no owner is visible. Errors go to stderr and return exit code 1; successful commands and help return 0. JSON uses the same snapshot schema for list, inspect, and watch: `listeners`, `warnings`, `scanned_at`, `duration_ns`. Unknown PIDs are `0`; unknown metadata is empty rather than guessed.
 
-Without an interactive terminal, the overview prints one plain snapshot and watch prints successive snapshots. `--no-containers` skips optional engine queries for list, inspect, watch, and the overview. `--once` prints a single overview. Ranges are inclusive and must be within 1–65535. Filtering is case-insensitive and includes parents, services, and container names.
+Without an interactive terminal, the overview prints one plain snapshot and watch prints successive snapshots. `--no-containers` skips optional engine queries for list, inspect, watch, and the overview. `--once` prints a single overview. Ranges are inclusive and must be within 1–65535. `watch` accepts either a positional port or `--range`, and rejects using both together. Filtering is case-insensitive and includes parents, services, and container names.
 
 ## Termination safety
 
