@@ -47,3 +47,17 @@
 }
 
 .hero-word { white-space: nowrap; }
+
+/* Pointer glow stays clipped to the viewport and never intercepts clicks. */
+.pointer-layer { position: fixed; inset: 0; z-index: 5; overflow: hidden; pointer-events: none; opacity: 0; transition: opacity 220ms ease; }
+.pointer-layer.is-active { opacity: 1; }
+.pointer-halo { position: absolute; top: 0; left: 0; width: 440px; height: 440px; border-radius: 50%; background: radial-gradient(circle, #c1f56b12, #c1f56b05 35%, transparent 70%); transform: translate3d(-600px, -600px, 0); }
+.terminal { position: relative; transition: transform 180ms ease-out, border-color 250ms ease, box-shadow 250ms ease; }
+.terminal.pointer-active { transform: perspective(1200px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)); }
+.terminal::after { content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: inherit; opacity: 0; background: radial-gradient(500px circle at var(--shine-x, 50%) var(--shine-y, 50%), #c1f56b10, transparent 60%); transition: opacity 180ms ease; }
+.terminal.pointer-active::after { opacity: 1; }
+@media (prefers-reduced-motion: reduce), (hover: none), (pointer: coarse) {
+  .pointer-layer { display: none; }
+  .terminal, .terminal.pointer-active { transform: none; }
+  .terminal::after { display: none; }
+}

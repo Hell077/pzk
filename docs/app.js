@@ -68,3 +68,66 @@ if ('IntersectionObserver' in window && !reducedMotion.matches) {
   }, { threshold: 0.08 });
   sections.forEach(section => reveals.observe(section));
 }
+
+// One frame per pointer event burst; no animation loop runs while the pointer is idle.
+const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
+let stopPointerEffects = () => {};
+function syncPointerEffects() {
+  stopPointerEffects();
+  stopPointerEffects = () => {};
+  if (reducedMotion.matches || !finePointer.matches) return;
+  const layer = document.createElement('div');
+  layer.className = 'pointer-layer';
+  layer.setAttribute('aria-hidden', 'true');
+  const halo = document.createElement('div');
+  halo.className = 'pointer-halo';
+  layer.append(halo);
+  document.body.append(layer);
+  const terminal = document.querySelector('.terminal');
+  let frame = 0;
+  let x = 0;
+  let y = 0;
+  function reset() {
+    cancelAnimationFrame(frame);
+    frame = 0;
+    layer.classList.remove('is-active');
+    terminal?.classList.remove('pointer-active');
+  }
+  function render() {
+    frame = 0;
+    const rect = terminal?.getBoundingClientRect();
+    const inside = rect && x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
+    halo.style.transform = `translate3d(${x - 220}px, ${y - 220}px, 0)`;
+    layer.classList.add('is-active');
+    if (inside) {
+      const rx = (x - rect.left) / rect.width;
+      const ry = (y - rect.top) / rect.height;
+      terminal.style.setProperty('--tilt-x', `${(0.5 - ry) * 4}deg`);
+      terminal.style.setProperty('--tilt-y', `${(rx - 0.5) * 4}deg`);
+      terminal.style.setProperty('--shine-x', `${rx * 100}%`);
+      terminal.style.setProperty('--shine-y', `${ry * 100}%`);
+      terminal.classList.add('pointer-active');
+    } else {
+      terminal?.classList.remove('pointer-active');
+    }
+  }
+  function move(event) {
+    if (event.pointerType === 'touch') return;
+    x = event.clientX;
+    y = event.clientY;
+    if (!frame) frame = requestAnimationFrame(render);
+  }
+  document.addEventListener('pointermove', move, { passive: true });
+  document.addEventListener('pointerleave', reset);
+  window.addEventListener('blur', reset);
+  stopPointerEffects = () => {
+    reset();
+    document.removeEventListener('pointermove', move);
+    document.removeEventListener('pointerleave', reset);
+    window.removeEventListener('blur', reset);
+    layer.remove();
+  };
+}
+finePointer.addEventListener('change', syncPointerEffects);
+reducedMotion.addEventListener('change', syncPointerEffects);
+syncPointerEffects();
