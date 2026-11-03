@@ -58,6 +58,12 @@ func owners(s inspect.Snapshot, port uint32, protected map[int32]bool) ([]inspec
 			return nil, errors.New("port has a container publication; stop the named container with its engine instead of killing a host proxy")
 		}
 		p := l.Process
+		name := strings.ToLower(p.Name)
+		for _, proxy := range []string{"docker-proxy", "com.docker.backend", "rootlessport", "rootlesskit", "vpnkit", "gvproxy"} {
+			if strings.Contains(name, proxy) {
+				return nil, fmt.Errorf("refusing container runtime/proxy %s; stop its container with the engine", p.Name)
+			}
+		}
 		if p.PID <= 0 || p.Name == "" || p.StartedAt <= 0 {
 			return nil, errors.New("cannot identify every port owner; check permissions and retry; no process was signaled")
 		}

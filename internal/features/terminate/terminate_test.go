@@ -107,3 +107,11 @@ func TestTimeoutDoesNotEscalate(t *testing.T) {
 		t.Fatalf("err=%v signals=%d", err, h.signals)
 	}
 }
+
+func TestProxyRejectedWithoutContainerMetadata(t *testing.T) {
+	l := fixture(42, 100)
+	l.Process.Name = "com.docker.backend"
+	if _, err := owners(snap(l), 8080, nil); err == nil {
+		t.Fatal("container backend accepted")
+	}
+}
