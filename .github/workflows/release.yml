@@ -40,10 +40,10 @@ jobs:
           suffix=""
           if [ "$GOOS" = windows ]; then suffix=".exe"; fi
           mkdir -p dist
-          go build -trimpath -ldflags="-s -w -X main.version=$VERSION" -o "dist/portguard_${GOOS}_${GOARCH}${suffix}" .
+          go build -trimpath -ldflags="-s -w -X main.version=$VERSION" -o "dist/pzk_${GOOS}_${GOARCH}${suffix}" .
       - uses: actions/upload-artifact@v4
         with:
-          name: portguard-${{ matrix.os }}-${{ matrix.arch }}
+          name: pzk-${{ matrix.os }}-${{ matrix.arch }}
           path: dist/*
   publish:
     needs: build
@@ -53,7 +53,7 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          pattern: portguard-*
+          pattern: pzk-*
           merge-multiple: true
           path: dist
       - name: Publish checksummed binaries
@@ -64,5 +64,5 @@ jobs:
         shell: bash
         run: |
           cd dist
-          sha256sum portguard_* > checksums.txt
-          gh release create "$VERSION" portguard_* checksums.txt --verify-tag --title "Portguard $VERSION" --generate-notes
+          sha256sum pzk_* > checksums.txt
+          gh release create "$VERSION" pzk_* checksums.txt --verify-tag --title "PortZapKill $VERSION" --generate-notes

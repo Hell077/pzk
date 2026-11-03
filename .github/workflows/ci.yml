@@ -26,18 +26,18 @@ jobs:
         if: runner.os != 'Windows'
         shell: bash
         env:
-          PORTGUARD_INSTALL_DIR: ${{ runner.temp }}/portguard-release-install
+          PZK_INSTALL_DIR: ${{ runner.temp }}/pzk-release-install
         run: |
           sh scripts/install.sh
-          "$PORTGUARD_INSTALL_DIR/portguard" --version
+          "$PZK_INSTALL_DIR/pzk" --version
       - name: Install published Windows release
         if: runner.os == 'Windows'
         shell: pwsh
         env:
-          PORTGUARD_INSTALL_DIR: ${{ runner.temp }}/portguard-release-install
+          PZK_INSTALL_DIR: ${{ runner.temp }}/pzk-release-install
         run: |
           ./scripts/install.ps1
-          & "$env:PORTGUARD_INSTALL_DIR/portguard.exe" --version
+          & "$env:PZK_INSTALL_DIR/pzk.exe" --version
       - name: Test SIMD build
         run: go test ./...
         env:

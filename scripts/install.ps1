@@ -5,9 +5,9 @@ $arch = switch ([Runtime.InteropServices.RuntimeInformation]::OSArchitecture.ToS
     'Arm64' { 'arm64' }
     default { throw 'Unsupported architecture. Install from source with Go 1.27.3+.' }
 }
-$asset = "portguard_windows_$arch.exe"
-$base = 'https://github.com/Hell077/portguard/releases/latest/download'
-$dir = if ($env:PORTGUARD_INSTALL_DIR) { $env:PORTGUARD_INSTALL_DIR } else { Join-Path $env:LOCALAPPDATA 'Portguard' }
+$asset = "pzk_windows_$arch.exe"
+$base = 'https://github.com/Hell077/pzk/releases/latest/download'
+$dir = if ($env:PZK_INSTALL_DIR) { $env:PZK_INSTALL_DIR } else { Join-Path $env:LOCALAPPDATA 'PortZapKill' }
 $temp = Join-Path ([IO.Path]::GetTempPath()) ([Guid]::NewGuid().ToString())
 New-Item -ItemType Directory -Path $temp | Out-Null
 try {
@@ -21,8 +21,8 @@ try {
     $expected = ($line.Trim() -split '\s+')[0]
     if ((Get-FileHash $binary -Algorithm SHA256).Hash -ne $expected) { throw 'Checksum mismatch. Nothing installed.' }
     New-Item -ItemType Directory -Force -Path $dir | Out-Null
-    Copy-Item $binary (Join-Path $dir 'portguard.exe') -Force
-    Write-Output "Installed Portguard to $dir\portguard.exe"
+    Copy-Item $binary (Join-Path $dir 'pzk.exe') -Force
+    Write-Output "Installed PortZapKill to $dir\pzk.exe"
     if (($env:Path -split ';') -notcontains $dir) { Write-Output "Add this directory to your user PATH: $dir" }
 } finally {
     Remove-Item $temp -Recurse -Force

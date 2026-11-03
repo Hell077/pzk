@@ -1,11 +1,11 @@
 #!/bin/sh
-# Install the latest checksummed Portguard release without root privileges.
+# Install the latest checksummed PortZapKill release without root privileges.
 set -eu
 case "$(uname -s)" in Linux) os=linux ;; Darwin) os=darwin ;; *) echo 'Use install.ps1 on Windows; supported Unix systems are Linux and macOS.' >&2; exit 1 ;; esac
 case "$(uname -m)" in x86_64|amd64) arch=amd64 ;; arm64|aarch64) arch=arm64 ;; *) echo 'Unsupported architecture; install from source with Go 1.27.3+.' >&2; exit 1 ;; esac
-asset="portguard_${os}_${arch}"
-base='https://github.com/Hell077/portguard/releases/latest/download'
-dir="${PORTGUARD_INSTALL_DIR:-$HOME/.local/bin}"
+asset="pzk_${os}_${arch}"
+base='https://github.com/Hell077/pzk/releases/latest/download'
+dir="${PZK_INSTALL_DIR:-$HOME/.local/bin}"
 tmp="$(mktemp -d)"
 trap 'rm -rf "$tmp"' EXIT HUP INT TERM
 curl -fsSL --retry 3 "$base/$asset" -o "$tmp/$asset"
@@ -18,6 +18,6 @@ else
 fi
 if [ -z "$expected" ] || [ "$expected" != "$actual" ]; then echo 'Checksum verification failed; nothing installed.' >&2; exit 1; fi
 mkdir -p "$dir"
-install -m 0755 "$tmp/$asset" "$dir/portguard"
-printf 'Installed Portguard to %s/portguard\n' "$dir"
+install -m 0755 "$tmp/$asset" "$dir/pzk"
+printf 'Installed PortZapKill to %s/pzk\n' "$dir"
 case ":$PATH:" in *":$dir:"*) ;; *) printf 'Add this directory to your shell PATH: %s\n' "$dir" ;; esac
