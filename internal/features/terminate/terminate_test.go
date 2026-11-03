@@ -115,3 +115,12 @@ func TestProxyRejectedWithoutContainerMetadata(t *testing.T) {
 		t.Fatal("container backend accepted")
 	}
 }
+
+func TestReviewedSelectionCannotSilentlyChangeTargets(t *testing.T) {
+	opened := false
+	b := backend{snapshot: func(context.Context) (inspect.Snapshot, error) { return snap(fixture(42, 200), fixture(43, 100)), nil }, reviewed: []inspect.Process{fixture(42, 100).Process}, open: func(inspect.Process, bool) (target, error) { opened = true; return &fakeTarget{}, nil }}
+	err := b.run(context.Background(), 8080, false, true, strings.NewReader(""), &bytes.Buffer{})
+	if err == nil || !strings.Contains(err.Error(), "reviewed") || opened {
+		t.Fatalf("changed selection was accepted: err=%v opened=%v", err, opened)
+	}
+}

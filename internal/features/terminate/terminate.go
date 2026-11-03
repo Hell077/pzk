@@ -13,7 +13,6 @@ import (
 	"time"
 
 	"github.com/Hell077/portguard/internal/features/inspect"
-	"github.com/Hell077/portguard/internal/features/scan"
 	"github.com/shirou/gopsutil/v4/process"
 )
 
@@ -22,12 +21,11 @@ type backend struct {
 	open      func(inspect.Process, bool) (target, error)
 	protected map[int32]bool
 	timeout   time.Duration
+	reviewed  []inspect.Process
 }
 
 func Run(ctx context.Context, port uint32, force, yes bool, in io.Reader, out io.Writer) error {
-	b := backend{snapshot: func(ctx context.Context) (inspect.Snapshot, error) {
-		return scan.Snapshot(ctx, scan.Options{Containers: true})
-	}, open: openTarget, protected: protectedPIDs(ctx), timeout: 5 * time.Second}
+	b := nativeBackend(ctx)
 	return b.run(ctx, port, force, yes, in, out)
 }
 
@@ -124,6 +122,9 @@ func (b backend) run(ctx context.Context, port uint32, force, yes bool, in io.Re
 	expected, err := owners(s, port, b.protected)
 	if err != nil {
 		return err
+	}
+	if b.reviewed != nil && !sameOwners(b.reviewed, expected) {
+		return errors.New("port owners changed since the selection was reviewed; reopen confirmation; no process was signaled")
 	}
 	action := "Request graceful shutdown"
 	if force {
