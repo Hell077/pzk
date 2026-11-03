@@ -47,8 +47,10 @@ func run(args []string, version string, in io.Reader, out, errOut io.Writer) err
 	} else {
 		fs.BoolVar(&o.json, "json", false, "JSON snapshot (watch: one object per refresh)")
 		fs.BoolVar(&o.noContainers, "no-containers", false, "skip Docker and Podman queries")
-		if command == "list" || command == "" {
+		if command == "list" || command == "" || command == "watch" {
 			fs.StringVar(&portRange, "range", "", "inclusive port range, e.g. 3000-9000")
+		}
+		if command == "list" || command == "" {
 			fs.StringVar(&o.protocol, "protocol", "all", "all, tcp, or udp")
 			fs.StringVar(&o.query, "filter", "", "filter owner, parent, service, address, or container")
 		}
@@ -65,10 +67,12 @@ func run(args []string, version string, in io.Reader, out, errOut io.Writer) err
 	}
 	fs.Usage = func() {
 		if command == "" {
-			fmt.Fprint(errOut, "Portguard — know what owns your ports.\n\nUsage: portguard <command> [flags]\n\n  list [--range 3000-9000] [--json]\n  inspect PORT [--json]\n  watch PORT [--interval 2s]\n  kill PORT [--force] [--yes]\n\nWith no command, Portguard opens the live terminal UI. Inspection never changes processes or firewalls.\nKill asks for confirmation unless --yes; it never escalates automatically.\n")
+			fmt.Fprint(errOut, "Portguard — know what owns your ports.\n\nUsage: portguard <command> [flags]\n\n  list [--range 3000-9000] [--json]\n  inspect PORT [--json]\n  watch (PORT | --range START-END) [--interval 2s]\n  kill PORT [--force] [--yes]\n\nWith no command, Portguard opens the live terminal UI. Inspection never changes processes or firewalls.\nKill asks for confirmation unless --yes; it never escalates automatically.\n")
 		} else {
 			fmt.Fprintf(errOut, "Usage: portguard %s", command)
-			if command != "list" {
+			if command == "watch" {
+				fmt.Fprint(errOut, " (PORT | --range START-END)")
+			} else if command != "list" {
 				fmt.Fprint(errOut, " PORT")
 			}
 			fmt.Fprintln(errOut, " [flags]")
@@ -103,7 +107,15 @@ func run(args []string, version string, in io.Reader, out, errOut io.Writer) err
 		fmt.Fprintf(out, "portguard %s (%s; search: %s)\n", version, runtime.Version(), search.Backend)
 		return nil
 	}
-	if command == "inspect" || command == "watch" || command == "kill" {
+	if command == "watch" {
+		if portArg != "" && portRange != "" {
+			return errors.New("watch accepts either PORT or --range, not both")
+		}
+		if portArg == "" && portRange == "" {
+			return errors.New("watch requires PORT or --range START-END")
+		}
+	}
+	if command == "inspect" || command == "kill" || command == "watch" && portArg != "" {
 		p, err := parsePort(portArg)
 		if err != nil {
 			return err

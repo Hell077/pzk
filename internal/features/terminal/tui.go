@@ -148,7 +148,13 @@ func (m model) View() string {
 		status = "◌ SCANNING"
 	}
 	b.WriteString(bright.Render("◈ PORTGUARD") + "  " + muted.Render("know what owns your ports") + "\n")
-	b.WriteString(accent.Render(status) + muted.Render(fmt.Sprintf("   %d visible · %s · read-only", len(rows), m.snapshot.Duration.Round(time.Millisecond))) + "\n\n")
+	scope := ""
+	if m.opts.low > 0 {
+		scope = fmt.Sprintf(" · ports %d–%d", m.opts.low, m.opts.high)
+	} else if m.opts.port > 0 {
+		scope = fmt.Sprintf(" · port %d", m.opts.port)
+	}
+	b.WriteString(accent.Render(status) + muted.Render(fmt.Sprintf("   %d visible%s · %s · read-only", len(rows), scope, m.snapshot.Duration.Round(time.Millisecond))) + "\n\n")
 	filter := "/ search owner, port, service, container"
 	if m.query != "" || m.editing {
 		filter = "/ " + m.query
