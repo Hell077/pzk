@@ -51,3 +51,20 @@ document.querySelector('#copy').addEventListener('click', async () => {
     status.textContent = 'Clipboard is unavailable. Select and copy the command above.';
   }
 });
+
+// Reveal content once as it enters the viewport; never hide content without JS support.
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+if ('IntersectionObserver' in window && !reducedMotion.matches) {
+  const sections = document.querySelectorAll('.product, .workflow-heading, .command-workbench, .safety > div, .install-heading, .install-box, .downloads');
+  sections.forEach(section => section.classList.add('reveal'));
+  document.documentElement.classList.add('motion-ready');
+  const reveals = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        reveals.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08 });
+  sections.forEach(section => reveals.observe(section));
+}
