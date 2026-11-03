@@ -1,0 +1,68 @@
+name: Release
+on:
+  push:
+    tags: ['v*']
+permissions:
+  contents: read
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v6
+        with:
+          go-version: '1.27.3'
+      - run: go test ./...
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [linux, darwin, windows]
+        arch: [amd64, arm64]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v6
+        with:
+          go-version: '1.27.3'
+      - name: Build single binary
+        env:
+          GOOS: ${{ matrix.os }}
+          GOARCH: ${{ matrix.arch }}
+          CGO_ENABLED: '0'
+          VERSION: ${{ github.ref_name }}
+        shell: bash
+        run: |
+          suffix=""
+          if [ "$GOOS" = windows ]; then suffix=".exe"; fi
+          mkdir -p dist
+          go build -trimpath -ldflags="-s -w -X main.version=$VERSION" -o "dist/portguard_${GOOS}_${GOARCH}${suffix}" .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: portguard-${{ matrix.os }}-${{ matrix.arch }}
+          path: dist/*
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: portguard-*
+          merge-multiple: true
+          path: dist
+      - name: Publish checksummed binaries
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          VERSION: ${{ github.ref_name }}
+        shell: bash
+        run: |
+          cd dist
+          sha256sum portguard_* > checksums.txt
+          gh release create "$VERSION" portguard_* checksums.txt --verify-tag --title "Portguard $VERSION" --generate-notes
