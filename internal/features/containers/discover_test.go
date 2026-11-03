@@ -12,3 +12,16 @@ func TestParsePublishedPorts(t *testing.T) {
 		t.Fatal("out of range port accepted")
 	}
 }
+
+func TestLocalContextOnly(t *testing.T) {
+	for _, s := range []string{"tcp://host:2375", "ssh://server", "", "https://localhost:2376"} {
+		if LocalEndpoint(s) {
+			t.Fatalf("remote or unknown endpoint accepted: %s", s)
+		}
+	}
+	for _, s := range []string{"unix:///var/run/docker.sock", "npipe:////./pipe/docker_engine"} {
+		if !LocalEndpoint(s) {
+			t.Fatal(s)
+		}
+	}
+}

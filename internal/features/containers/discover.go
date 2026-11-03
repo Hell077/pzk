@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/Hell077/portguard/internal/features/inspect"
 	"github.com/Hell077/portguard/internal/platform/command"
+	"os"
 	"os/exec"
 	"strconv"
 	"strings"
@@ -33,6 +34,27 @@ func Discover(ctx context.Context) ([]inspect.Container, []string) {
 	var warnings []string
 	for _, engine := range []string{"docker", "podman"} {
 		if _, err := exec.LookPath(engine); err != nil {
+			continue
+		}
+		if engine == "docker" {
+			endpoint := os.Getenv("DOCKER_HOST")
+			if endpoint == "" || os.Getenv("DOCKER_CONTEXT") != "" {
+				data, err := command.Output(ctx, "docker", "context", "inspect", "--format", "{{.Endpoints.docker.Host}}")
+				if err != nil {
+					warnings = append(warnings, "docker: could not verify a local context; mappings skipped")
+					continue
+				}
+				endpoint = strings.TrimSpace(string(data))
+			}
+			if !LocalEndpoint(endpoint) {
+				warnings = append(warnings, "docker: remote context skipped; only local ports are inspected")
+				continue
+			}
+		} else if host := os.Getenv("CONTAINER_HOST"); host != "" && !LocalEndpoint(host) {
+			warnings = append(warnings, "podman: remote CONTAINER_HOST skipped")
+			continue
+		} else if os.Getenv("CONTAINER_CONNECTION") != "" {
+			warnings = append(warnings, "podman: explicit remote connection skipped")
 			continue
 		}
 		ids, err := command.Output(ctx, engine, "ps", "-q")
@@ -85,4 +107,9 @@ func Parse(engine string, data []byte) ([]inspect.Container, error) {
 		}
 	}
 	return result, nil
+}
+
+// LocalEndpoint accepts only local IPC transports, never TCP or SSH endpoints.
+func LocalEndpoint(endpoint string) bool {
+	return strings.HasPrefix(endpoint, "unix://") || strings.HasPrefix(endpoint, "npipe://")
 }
